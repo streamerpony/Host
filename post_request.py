@@ -7,10 +7,10 @@ def request_and_receive_pkg(pkg_filename=None):
         # 未传入文件名，发起打包请求
         if not pkg_filename:
             response = requests.post(post_request_API)
-            if response.status_code != 200:
-                return {"success": False, "message": f"打包请求失败: {response.text}"}
-
             data = response.json()
+            if not data.get("success"):
+                return {"success": False, "message": data.get("message", "未知错误")}
+            
             pkg_filename = data.get("binary_filename")
             if not pkg_filename:
                 return {"success": False, "message": "未返回 pkg 文件名"}
@@ -35,12 +35,3 @@ def request_and_receive_pkg(pkg_filename=None):
     except Exception as e:
         return {"success": False, "message": str(e)}
 
-def confirm_received(pkg_filename):
-    try:
-        response = requests.post(confirm_received_API, json={"pkg_filename": pkg_filename})
-        if response.status_code == 200:
-            return {"success": True}
-        else:
-            return {"success": False, "message": response.text}
-    except Exception as e:
-        return {"success": False, "message": str(e)}

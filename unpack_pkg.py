@@ -1,6 +1,5 @@
 import struct
 import hashlib
-import os
 
 MODEL_MAP_REVERSE = {
     0: 'model_a',
@@ -39,7 +38,7 @@ def unpack_pkg(pkg_path):
             image_list.append({
                 "img_id": str(img_id),
                 "model": model_name,
-                "data": img_data  # 注意：这里不写文件，直接返回二进制数据
+                "data": img_data
             })
 
         return {"success": True, "images": image_list}
